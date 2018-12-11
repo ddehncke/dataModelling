@@ -5,6 +5,15 @@ from config import config
 from configparser import ConfigParser
 import pandas as pd
 import numpy as np
+from random import shuffle
+
+def common_member(a, b):
+    a_set = set(a)
+    b_set = set(b)
+    if (a_set & b_set):
+        return (a_set & b_set)
+    else:
+       return False
 
 def connect():
     """ Connect to the PostgreSQL database server """
@@ -27,9 +36,89 @@ if __name__ == '__main__':
     # connect to the database
     cur, conn = connect()
     # get data from csv dataset
-    file = 'yelp-dataset/' + 'yelp_checkin.csv'
-    data = pd.read_csv(file)
+    file_data = 'yelp-dataset/' + 'yelp_business.csv'
+    data = pd.read_csv(file_data)
+    data = data[data['categories'].str.contains("Restaurants")]
+
+
+    file_list = 'yelp-dataset/' + 'yelp restaurant categorys2.csv'
+    list_cat = pd.read_csv(file_list)
+    list_cat = list_cat['Categories'].tolist()
+
+    data_to_insert = []
+    for index, row in data.iterrows():
+        categories = row['categories']
+        split = categories.split(';')
+        try:
+            split.remove('Restaurants')
+            split.remove('Food')
+            split.remove('Comfort Food')
+            split.remove('Salad')
+        except:
+            pass
+        common = common_member(split, list_cat)
+        if(common != False):
+            commons = list(common)
+            shuffle(commons)
+            category = commons[0]
+            id_business = row['business_id']
+            object = {
+                'id_business': id_business,
+                'category': category
+            }
+            data_to_insert.append(object)
+        else:
+            pass
+
+    for object in data_to_insert:
+        business_id = object['id_business']
+        category = object['category']
+        query = "UPDATE restaurant SET category = '%s' WHERE id_business = '%s';" % (category, business_id)
+        cur.execute(query)
+        conn.commit()
+    cur.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    '''
     # dataset documentation https://www.kaggle.com/yelp-dataset/yelp-dataset/version/6#yelp_business_attributes.csv
+    query = "SELECT rest.id_business, rest.geog, ST_X(rest.geog::geometry) as latitude, ST_Y(rest.geog::geometry) as longitude FROM restaurant rest;"
+    cur.execute(query)
+    rows = cur.fetchall()
+    dataframe = pd.DataFrame(rows)
+    spatial_index = [0,2,3]
+    dataframe[spatial_index].to_csv('spatial_info.csv')
+    '''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # INSERT USER DATA
     '''
@@ -44,11 +133,9 @@ if __name__ == '__main__':
         cur.execute(query, data_to_insert)
         conn.commit()
     cur.close()
-    '''
 
     # INSERT RESTAURANT
 
-    '''
     # take only restaurants
     data = data[data['categories'].str.contains("Restaurants")]
     for index, row in data.iterrows():
@@ -86,10 +173,10 @@ if __name__ == '__main__':
             cur.execute(query)
             conn.commit()
     cur.close()
-    '''
+
 
     # INSERT TIPS
-    '''
+    
     for index, row in data.iterrows():
         print(row['business_id'])
         query_check = "SELECT id_business FROM restaurant WHERE id_business = '%s' " % (row['business_id'])  # cercare di mettere tutto in una query
@@ -100,10 +187,10 @@ if __name__ == '__main__':
             cur.execute(query, data_to_insert)
             conn.commit()
     cur.close()
-    '''
+    
 
     # INSERT REVIEW
-    '''
+    
     for index, row in data.iterrows():
         business, user = False, False
         query_check = "SELECT id_business FROM restaurant WHERE id_business = '%s'" % (row['business_id'])
@@ -120,9 +207,9 @@ if __name__ == '__main__':
             cur.execute(query, data_to_insert)
             conn.commit()
     cur.close()
-    '''
 
-    '''
+
+    
     # INSERT CHECKIN
     for index, row in data.iterrows():
         query_check = "SELECT id_business FROM restaurant WHERE id_business = '%s'" % (row['business_id'])
