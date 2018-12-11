@@ -40,7 +40,7 @@ if __name__ == '__main__':
     data = pd.read_csv(file_data)
     data = data[data['categories'].str.contains("Restaurants")]
 
-
+    '''
     file_list = 'yelp-dataset/' + 'yelp restaurant categorys2.csv'
     list_cat = pd.read_csv(file_list)
     list_cat = list_cat['Categories'].tolist()
@@ -77,6 +77,33 @@ if __name__ == '__main__':
         cur.execute(query)
         conn.commit()
     cur.close()
+    '''
+    # DELETE FROM DATABASE THE COLUMNS WITH CATEGORY NULL
+    # retrieve all the restaurant with category NULL
+    query = "SELECT id_business FROM restaurant WHERE category IS NULL;"
+    cur.execute(query)
+    rows = cur.fetchall()
+    for business in rows:
+        business = business[0]
+        print(business)
+        delete_checkin = "delete from checkin where checkin.business = '%s';" % (business)
+        cur.execute(query)
+        conn.commit()
+
+        delete_review = "delete from review where review.business = '%s';" % (business)
+        cur.execute(query)
+        conn.commit()
+
+        delete_tip = "delete from tip where tip.business = '%s';" % (business)
+        cur.execute(query)
+        conn.commit()
+
+        delete_business = "delete from restaurant where id_business = '%s';" % (business)
+        cur.execute(query)
+        conn.commit()
+
+
+
 
 
 
