@@ -73,7 +73,7 @@ PRE PROCESSING
         d_ Show most 5 common cusine in EU and USA (5 highest number of restaurant that propose the cusine)
 
 
-    2_ Focus analysis in a city of europe (with the highest number of data)
+    2_ Focus  analysis in a city of europe (with the highest number of data)
       a_ Most 5 common cusine in that city (like before)
       b_ Highest checkin cusine
       c_ Highest checkin restaurant
