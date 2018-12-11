@@ -67,13 +67,25 @@ PRE PROCESSING
 7_ Present results
   A_
     1_ Present the spatial informations about the entire dataset (display in a map the restaurants)
-    2_ Divide the spatial informations in regions (USA and EU)
-    3_ Show the main results grouped by area (5 most common cusine, 5 highest reated cusine, 5 most famous restaurants, 5 highest cusine)
-  B_
-    1_ Present the results analyzing over the time
-    2_ Changing of common cusines over time
-    3_ Changing of highest rated cusine over time
-    4_ The same for the restaurants
+        a_ Show the opened restaurants in EU and USA
+        b_ Show number of guests and reviews for EU and USA
+        c_ Number of reviews and checkin in EU and USA
+        d_ Show most 5 common cusine in EU and USA (5 highest number of restaurant that propose the cusine)
+
+
+    2_ Focus analysis in a city of europe (with the highest number of data)
+      a_ Most 5 common cusine in that city (like before)
+      b_ Highest checkin cusine
+      c_ Highest checkin restaurant
+      d_ Highest reviewd cusine (consider only numbers of reviews)
+      e_ Highest reviewd restaurant (consider only numbers of reviews)
+      f_ Highest evaluated cusine
+      g_ Highest evaluated restaurants
+      h_ The same 2 points before but using a weight to the reviews based on the users
+
+    3_ About opening restaurant
+      a_ See the checkins of users during the time (over the day)
+      b_
 
 EXAMPLE
 1_ Open a restaurant in a specific city
