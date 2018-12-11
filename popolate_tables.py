@@ -85,21 +85,20 @@ if __name__ == '__main__':
     rows = cur.fetchall()
     for business in rows:
         business = business[0]
-        print(business)
         delete_checkin = "delete from checkin where checkin.business = '%s';" % (business)
-        cur.execute(query)
+        cur.execute(delete_checkin)
         conn.commit()
 
         delete_review = "delete from review where review.business = '%s';" % (business)
-        cur.execute(query)
+        cur.execute(delete_review)
         conn.commit()
 
         delete_tip = "delete from tip where tip.business = '%s';" % (business)
-        cur.execute(query)
+        cur.execute(delete_tip)
         conn.commit()
 
         delete_business = "delete from restaurant where id_business = '%s';" % (business)
-        cur.execute(query)
+        cur.execute(delete_business)
         conn.commit()
 
 
